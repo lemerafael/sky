@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
-import com.sky.projects.dto.User;
+import com.sky.projects.model.persistence.User;
 import com.sky.projects.repository.UserRepository;
 
 import lombok.extern.java.Log;
