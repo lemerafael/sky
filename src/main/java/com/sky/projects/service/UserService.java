@@ -34,14 +34,14 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/get")
+    @GetMapping("/users/v1/get")
     @Operation(summary = "Get All Users")
     public List<UserDTO> getAll() {
         List<User> users = repository.findAll();
         return userMapper.toDtoList(users);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/users/v1/get/{id}")
     @Operation(summary = "Get User by id")
     public UserDTO get(Long id) {
         Optional<User> userRepo = repository.findById(id);
@@ -52,7 +52,7 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    @PostMapping("/new")
+    @PostMapping("/users/v1/new")
     @Operation(summary = "Create New User")
     public ResponseEntity<?> create(@RequestBody UserDTO userReq) {
         log.log(Level.SEVERE, "Email: " + userReq.email());
@@ -72,7 +72,7 @@ public class UserService {
         return ResponseEntity.created(location).body(saved);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/users/v1/update/{id}")
     @Operation(summary = "Update User by id")
     public ResponseEntity<?> update(Long id, @RequestBody UserDTO userReq) {
         Optional<User> userRepo = repository.findById(id);
@@ -92,7 +92,7 @@ public class UserService {
         return ResponseEntity.created(location).body(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/v1/{id}")
     @Operation(summary = "Delete user by id")
     public void delete(Long id) {
         Optional<User> userRepo = repository.findById(id);
