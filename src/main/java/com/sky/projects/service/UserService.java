@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.sky.projects.model.api.UserRecord;
+import com.sky.projects.model.dto.UserDTO;
+import com.sky.projects.model.dto.UserMapper;
 import com.sky.projects.model.persistence.User;
 import com.sky.projects.repository.UserRepository;
 
@@ -28,26 +29,30 @@ public class UserService {
     @Autowired 
     private UserRepository repository; 
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping("/get")
     @Operation(summary = "Get All Users")
-    public List<User> getAll() {
-        return repository.findAll();
+    public List<UserDTO> getAll() {
+        List<User> users = repository.findAll();
+        return userMapper.toDtoList(users);
     }
 
     @GetMapping("/get/{id}")
     @Operation(summary = "Get User by id")
-    public User get(Long id) {
+    public UserDTO get(Long id) {
         Optional<User> userRepo = repository.findById(id);
-        User user = new User();
+        User user = null;
         if(userRepo.isPresent()) {
             user = userRepo.get();
         }
-        return user;
+        return userMapper.toDto(user);
     }
 
     @PostMapping("/new")
     @Operation(summary = "Create New User")
-    public ResponseEntity<?> create(@RequestBody UserRecord customerReq) {
+    public ResponseEntity<?> create(@RequestBody UserDTO customerReq) {
         log.log(Level.SEVERE, "Email: " + customerReq.email());
         log.log(Level.SEVERE, "Password: " + customerReq.password());
         log.log(Level.SEVERE, "Name: " + customerReq.name());
