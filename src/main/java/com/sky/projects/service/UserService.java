@@ -7,8 +7,10 @@ import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -44,7 +46,7 @@ public class UserService {
     public UserDTO get(Long id) {
         Optional<User> userRepo = repository.findById(id);
         User user = null;
-        if(userRepo.isPresent()) {
+        if (userRepo.isPresent()) {
             user = userRepo.get();
         }
         return userMapper.toDto(user);
@@ -52,14 +54,14 @@ public class UserService {
 
     @PostMapping("/new")
     @Operation(summary = "Create New User")
-    public ResponseEntity<?> create(@RequestBody UserDTO customerReq) {
-        log.log(Level.SEVERE, "Email: " + customerReq.email());
-        log.log(Level.SEVERE, "Password: " + customerReq.password());
-        log.log(Level.SEVERE, "Name: " + customerReq.name());
+    public ResponseEntity<?> create(@RequestBody UserDTO userReq) {
+        log.log(Level.SEVERE, "Email: " + userReq.email());
+        log.log(Level.SEVERE, "Password: " + userReq.password());
+        log.log(Level.SEVERE, "Name: " + userReq.name());
         User user = new User();
-        user.setEmail(customerReq.email());
-        user.setPassword(customerReq.password());
-        user.setName(customerReq.name());
+        user.setEmail(userReq.email());
+        user.setPassword(userReq.password());
+        user.setName(userReq.name());
         User saved = repository.save(user);
 
         URI location = ServletUriComponentsBuilder
@@ -68,6 +70,35 @@ public class UserService {
                 .buildAndExpand(saved.getId())
                 .toUri();
         return ResponseEntity.created(location).body(saved);
+    }
+
+    @PutMapping("/update/{id}")
+    @Operation(summary = "Update User by id")
+    public ResponseEntity<?> update(Long id, @RequestBody UserDTO userReq) {
+        Optional<User> userRepo = repository.findById(id);
+        User updatedUser = null;
+        if (userRepo.isPresent()) {
+            User user = userRepo.get();
+            user.setEmail(userReq.email());
+            user.setPassword(userReq.password());
+            user.setName(userReq.name());
+            updatedUser = repository.save(user);
+        }
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(updatedUser.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user by id")
+    public void delete(Long id) {
+        Optional<User> userRepo = repository.findById(id);
+        if (userRepo.isPresent()) {
+            repository.deleteById(id);
+        }
     }
 }
 
