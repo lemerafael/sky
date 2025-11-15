@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +26,7 @@ import lombok.extern.java.Log;
 
 @RestController
 @Log
+@RequestMapping("/projects/v1")
 public class ExternalProjectService {
     @Autowired
     private ExternalProjectRepository projRepo;
@@ -35,7 +37,7 @@ public class ExternalProjectService {
     @Autowired
     private ExternalProjectMapper projMapper;
 
-    @PostMapping("projects/v1/add/{id}")
+    @PostMapping("/add/{id}")
     public ResponseEntity<?> addTo(Long id, @RequestBody ExternalProjectDTO projectReq) {
         Optional<User> user = userRepo.findById(id);
         ResponseEntity response = null;
@@ -74,7 +76,7 @@ public class ExternalProjectService {
         return response;
     }
 
-    @GetMapping("projects/v1/get/{id}")
+    @GetMapping("/get/{id}")
     public List<ExternalProjectDTO> get(Long id) {
         List<ExternalProject> projects = projRepo.findAll().stream()
                                                             .filter(project -> project.getUser().getId() == id)

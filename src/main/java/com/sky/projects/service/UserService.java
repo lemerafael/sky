@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +27,7 @@ import lombok.extern.java.Log;
 
 @RestController
 @Log
+@RequestMapping("/users/v1")
 @Tag(name = "User", description = "Controller for Users")
 public class UserService {
     @Autowired 
@@ -34,14 +36,14 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/users/v1/get")
+    @GetMapping("/get")
     @Operation(summary = "Get All Users")
     public List<UserDTO> getAll() {
         List<User> users = repository.findAll();
         return userMapper.toDtoList(users);
     }
 
-    @GetMapping("/users/v1/get/{id}")
+    @GetMapping("/get/{id}")
     @Operation(summary = "Get User by id")
     public UserDTO get(Long id) {
         Optional<User> userRepo = repository.findById(id);
@@ -52,7 +54,7 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    @PostMapping("/users/v1/new")
+    @PostMapping("/new")
     @Operation(summary = "Create New User")
     public ResponseEntity<?> create(@RequestBody UserDTO userReq) {
         log.log(Level.SEVERE, "Email: " + userReq.email());
@@ -72,7 +74,7 @@ public class UserService {
         return ResponseEntity.created(location).body(saved);
     }
 
-    @PutMapping("/users/v1/update/{id}")
+    @PutMapping("/update/{id}")
     @Operation(summary = "Update User by id")
     public ResponseEntity<?> update(Long id, @RequestBody UserDTO userReq) {
         Optional<User> userRepo = repository.findById(id);
@@ -92,7 +94,7 @@ public class UserService {
         return ResponseEntity.created(location).body(updatedUser);
     }
 
-    @DeleteMapping("/users/v1/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete user by id")
     public void delete(Long id) {
         Optional<User> userRepo = repository.findById(id);
