@@ -26,13 +26,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sky.projects.controller.UserController;
 import com.sky.projects.model.dto.UserDTO;
 import com.sky.projects.model.dto.UserMapper;
 import com.sky.projects.model.persistence.User;
-import com.sky.projects.repository.UserRepository;
-import com.sky.projects.service.UserService;
+import com.sky.projects.service.UserManagementService;
 
-@WebMvcTest(UserService.class)
+@WebMvcTest(UserController.class)
 @Import(UserMapper.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class UserServiceTest {
@@ -50,7 +50,7 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @MockitoBean
-    private UserRepository userRepository;
+    private UserManagementService userService;
 
     private final String usersServicePrefix = "/v1/users";
 
@@ -59,18 +59,18 @@ public class UserServiceTest {
         Map<Long, User> users = mockDbUsers(1L, 2L, 3L);
         assertTrue(users.size() == 3);
 
-        mockMvc.perform(get(usersServicePrefix + "/"))
+        mockMvc.perform(get(usersServicePrefix))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty());
-        verify(userRepository).findAll();
+        verify(userService).getAllUsers();
     }
 
     @Test
     public void testGetUsersEmpty() throws Exception {
-        mockMvc.perform(get(usersServicePrefix + "/"))
+        mockMvc.perform(get(usersServicePrefix))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
-        verify(userRepository).findAll();
+        verify(userService).getAllUsers();
     }
 
     @Test
@@ -84,7 +84,7 @@ public class UserServiceTest {
                 .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
-        verify(userRepository).findById(searchedId);
+        verify(userService).getUserById(searchedId);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class UserServiceTest {
         mockMvc.perform(get(usersServicePrefix + "/" + searchedId))
                 .andExpect(status().isNotFound());
 
-        verify(userRepository).findById(searchedId);
+        verify(userService).getUserById(searchedId);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class UserServiceTest {
         User user = mockDbUser(searchedId);
         UserDTO userDTO = userMapper.toDto(user);
         String userDTOJson = objectMapper.writeValueAsString(userDTO);
-        mockMvc.perform(post(usersServicePrefix + "/")
+        mockMvc.perform(post(usersServicePrefix)
                 .content(userDTOJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -121,20 +121,20 @@ public class UserServiceTest {
                 .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
-        verify(userRepository).save(checkSavedUser(user));
+        verify(userService).createUser(checkSavedUserDTO(userDTO));
     }
 
-    private User checkSavedUser(User input) {
+    private UserDTO checkSavedUserDTO(UserDTO input) {
         return argThat(savedUser -> savedUser != null &&
-                savedUser.getEmail().equals(input.getEmail()) &&
-                savedUser.getPassword().equals(input.getPassword()) &&
-                savedUser.getName().equals(input.getName()));
+                savedUser.email().equals(input.email()) &&
+                savedUser.password().equals(input.password()) &&
+                savedUser.name().equals(input.name()));
     }
 
     private User mockDbUser(long id) {
         User user = initUser(id);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userRepository.save(checkSavedUser(user))).thenReturn(user);
+        when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
+        when(userService.createUser(checkSavedUserDTO(userMapper.toDto(user)))).thenReturn(user);
         when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
         return user;
     }
@@ -145,7 +145,7 @@ public class UserServiceTest {
             User user = mockDbUser(id);
             users.put(user.getId(), user);
         }
-        when(userRepository.findAll()).thenReturn(new ArrayList<>(users.values()));
+        when(userService.getAllUsers()).thenReturn(new ArrayList<>(users.values()));
         return users;
     }
 
