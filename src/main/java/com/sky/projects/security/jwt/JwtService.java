@@ -2,6 +2,7 @@ package com.sky.projects.security.jwt;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -9,7 +10,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 @Service
 public class JwtService {
-    private final String secretKey = "sky-secret-key-demo";
+    @Value("${jwt.secret.key}")
+    private String secretKey;
     private final long expirationMs = 3600000; // 1 hour
 
     public String generateToken(String username) {
