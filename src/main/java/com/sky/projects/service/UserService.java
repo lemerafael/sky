@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/")
     @Operation(summary = "Get all Users")
     public List<UserDTO> getAll() {
@@ -68,7 +72,7 @@ public class UserService {
         log.log(Level.SEVERE, "Name: " + userReq.name());
         User user = new User();
         user.setEmail(userReq.email());
-        user.setPassword(userReq.password());
+        user.setPassword(passwordEncoder.encode(userReq.password()));
         user.setName(userReq.name());
         User saved = repository.save(user);
 
@@ -88,7 +92,7 @@ public class UserService {
         if (userRepo.isPresent()) {
             User user = userRepo.get();
             user.setEmail(userReq.email());
-            user.setPassword(userReq.password());
+            user.setPassword(passwordEncoder.encode(userReq.password()));
             user.setName(userReq.name());
             updatedUser = repository.save(user);
         }

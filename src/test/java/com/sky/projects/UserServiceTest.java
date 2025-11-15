@@ -1,6 +1,7 @@
 package com.sky.projects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +45,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserMapper userMapper;
+
+    @MockitoBean
+    private PasswordEncoder passwordEncoder;
 
     @MockitoBean
     private UserRepository userRepository;
@@ -130,6 +135,7 @@ public class UserServiceTest {
         User user = initUser(id);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepository.save(checkSavedUser(user))).thenReturn(user);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
         return user;
     }
 
