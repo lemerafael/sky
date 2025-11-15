@@ -2,6 +2,7 @@ package com.sky.projects.service;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -9,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.sky.projects.model.dto.UserDTO;
@@ -45,13 +48,16 @@ public class UserService {
 
     @GetMapping("/get/{id}")
     @Operation(summary = "Get User by id")
-    public UserDTO get(Long id) {
-        Optional<User> userRepo = repository.findById(id);
-        User user = null;
-        if (userRepo.isPresent()) {
-            user = userRepo.get();
+    public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
+        try {
+            Optional<User> userRepo = repository.findById(id);
+            User user = userRepo.get();
+            return ResponseEntity.ok().body(userMapper.toDto(user));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MethodArgumentTypeMismatchException e) {
+            return ResponseEntity.badRequest().build();
         }
-        return userMapper.toDto(user);
     }
 
     @PostMapping("/new")
@@ -76,7 +82,7 @@ public class UserService {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Update User by id")
-    public ResponseEntity<?> update(Long id, @RequestBody UserDTO userReq) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserDTO userReq) {
         Optional<User> userRepo = repository.findById(id);
         User updatedUser = null;
         if (userRepo.isPresent()) {
@@ -96,7 +102,7 @@ public class UserService {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user by id")
-    public void delete(Long id) {
+    public void delete(@PathVariable("id") Long id) {
         Optional<User> userRepo = repository.findById(id);
         if (userRepo.isPresent()) {
             repository.deleteById(id);

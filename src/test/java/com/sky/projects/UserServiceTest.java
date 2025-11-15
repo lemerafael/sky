@@ -57,6 +57,7 @@ public class UserServiceTest {
         mockMvc.perform(get(usersServicePrefix + "/get"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty());
+        verify(userRepository).findAll();
     }
 
     @Test
@@ -64,6 +65,7 @@ public class UserServiceTest {
         mockMvc.perform(get(usersServicePrefix + "/get"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
+        verify(userRepository).findAll();
     }
 
     @Test
