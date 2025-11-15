@@ -1,16 +1,30 @@
 # SKY Projects Portal
 TODO: Add brief description
 
-## APIs
+## Endpoints
 
-### Users
-TODO
+### User Management
+
+| Endpoint                | Method | Description                   |
+|-------------------------|--------|-------------------------------|
+| `/v1/users`             | GET    | Get all users                 |
+| `/v1/users/{id}`        | GET    | Get user by id                |
+| `/v1/users`             | POST   | Create new user               |
+| `/v1/users/{id}`        | PUT    | Update user by id             |
+| `/v1/users/{id}`        | DELETE | Delete user by id             |
 
 ### Projects
-TODO
+
+| Endpoint                | Method | Description                   |
+|-------------------------|--------|-------------------------------|
+| `/v1/projects/{id}`     | GET    | Get projects from user by id  |
+| `/v1/projects/{id}`     | POST   | Add new project to user by id |
 
 ### Auth
-TODO
+
+| Endpoint                | Method | Description                   |
+|-------------------------|--------|-------------------------------|
+| `/auth/login`           | POST   | Get login token for user      |
 
 ## Security
 The project features a token-based authentication.
@@ -29,7 +43,7 @@ For future implementations, it is desirable to integrate the user information wi
 
 1. Compile the java project
 ```bash
-$ ./mvnw clean package -DskipTests
+$ ./mvnw clean package
 ```
 2. Copy the jar file to src/main/docker
 ```bash

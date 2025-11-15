@@ -30,8 +30,8 @@ import lombok.extern.java.Log;
 
 @RestController
 @Log
-@RequestMapping("/users/v1")
-@Tag(name = "User", description = "Controller for Users")
+@RequestMapping("/v1/users/")
+@Tag(name = "User", description = "User Management")
 public class UserService {
     @Autowired 
     private UserRepository repository; 
@@ -39,15 +39,15 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/get")
-    @Operation(summary = "Get All Users")
+    @GetMapping("/")
+    @Operation(summary = "Get all Users")
     public List<UserDTO> getAll() {
         List<User> users = repository.findAll();
         return userMapper.toDtoList(users);
     }
 
-    @GetMapping("/get/{id}")
-    @Operation(summary = "Get User by id")
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by id")
     public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
         try {
             Optional<User> userRepo = repository.findById(id);
@@ -60,8 +60,8 @@ public class UserService {
         }
     }
 
-    @PostMapping("/new")
-    @Operation(summary = "Create New User")
+    @PostMapping("/")
+    @Operation(summary = "Create new User")
     public ResponseEntity<?> create(@RequestBody UserDTO userReq) {
         log.log(Level.SEVERE, "Email: " + userReq.email());
         log.log(Level.SEVERE, "Password: " + userReq.password());
@@ -80,8 +80,8 @@ public class UserService {
         return ResponseEntity.created(location).body(saved);
     }
 
-    @PutMapping("/update/{id}")
-    @Operation(summary = "Update User by id")
+    @PutMapping("/{id}")
+    @Operation(summary = "Update user by id")
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserDTO userReq) {
         Optional<User> userRepo = repository.findById(id);
         User updatedUser = null;

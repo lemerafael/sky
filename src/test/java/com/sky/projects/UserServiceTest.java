@@ -47,14 +47,14 @@ public class UserServiceTest {
     @MockitoBean
     private UserRepository userRepository;
 
-    private final String usersServicePrefix = "/users/v1";
+    private final String usersServicePrefix = "/v1/users";
 
     @Test
     public void testGetUsers() throws Exception {
         Map<Long, User> users = mockDbUsers(1L, 2L, 3L);
         assertTrue(users.size() == 3);
 
-        mockMvc.perform(get(usersServicePrefix + "/get"))
+        mockMvc.perform(get(usersServicePrefix + "/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty());
         verify(userRepository).findAll();
@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUsersEmpty() throws Exception {
-        mockMvc.perform(get(usersServicePrefix + "/get"))
+        mockMvc.perform(get(usersServicePrefix + "/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
         verify(userRepository).findAll();
@@ -73,7 +73,7 @@ public class UserServiceTest {
         long searchedId = 1L;
         User user = mockDbUser(searchedId);
 
-        mockMvc.perform(get(usersServicePrefix + "/get/" + searchedId))
+        mockMvc.perform(get(usersServicePrefix + "/" + searchedId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(user.getName()))
                 .andExpect(jsonPath("$.password").value(user.getPassword()))
@@ -87,7 +87,7 @@ public class UserServiceTest {
         mockDbUser(1L);
 
         long searchedId = Long.MAX_VALUE;
-        mockMvc.perform(get(usersServicePrefix + "/get/" + searchedId))
+        mockMvc.perform(get(usersServicePrefix + "/" + searchedId))
                 .andExpect(status().isNotFound());
 
         verify(userRepository).findById(searchedId);
@@ -98,7 +98,7 @@ public class UserServiceTest {
         mockDbUser(1L);
 
         String searchedId = "null";
-        mockMvc.perform(get(usersServicePrefix + "/get/" + searchedId))
+        mockMvc.perform(get(usersServicePrefix + "/" + searchedId))
                 .andExpect(status().isBadRequest());
     }
 
@@ -108,7 +108,7 @@ public class UserServiceTest {
         User user = mockDbUser(searchedId);
         UserDTO userDTO = userMapper.toDto(user);
         String userDTOJson = objectMapper.writeValueAsString(userDTO);
-        mockMvc.perform(post(usersServicePrefix + "/new")
+        mockMvc.perform(post(usersServicePrefix + "/")
                 .content(userDTOJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())

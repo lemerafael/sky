@@ -26,7 +26,7 @@ import lombok.extern.java.Log;
 
 @RestController
 @Log
-@RequestMapping("/projects/v1")
+@RequestMapping("/v1/projects")
 public class ExternalProjectService {
     @Autowired
     private ExternalProjectRepository projRepo;
@@ -37,7 +37,7 @@ public class ExternalProjectService {
     @Autowired
     private ExternalProjectMapper projMapper;
 
-    @PostMapping("/add/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<?> addTo(Long id, @RequestBody ExternalProjectDTO projectReq) {
         Optional<User> user = userRepo.findById(id);
         ResponseEntity response = null;
@@ -76,7 +76,7 @@ public class ExternalProjectService {
         return response;
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public List<ExternalProjectDTO> get(Long id) {
         List<ExternalProject> projects = projRepo.findAll().stream()
                                                             .filter(project -> project.getUser().getId() == id)
