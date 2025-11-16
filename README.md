@@ -81,7 +81,11 @@ $ docker-compose down
 
 ## External projects
 - Separate service and controller data
-- Implement error treating
+- Implement error treatment and correct function returns
+- Change the logic for ID generation with auto Id Generation, as the current implementation is not thread-safe.
+
+## Security vulnerability
+- Correct vulnerability by exposing password in users endpoint. It is a bad practice to expose the password, but the input UserDTO was used for easiness.
 
 ## Testing for Users
 - Implement create tests with missing data
@@ -118,3 +122,12 @@ $ docker-compose down
 
 ### Custom Exceptions
 - Implement some custom Exceptions like UserNotFound or ProjectNotFound
+
+### Spring Boot Actuator
+- Enable health checks, metrics, and monitoring endpoints
+
+### Input validation
+- Add input validation (annotations) on DTOs
+
+### Demo data
+- Remove hardcoded demo data in Java and use seed data on the database
