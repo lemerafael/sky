@@ -56,6 +56,16 @@ public class UserManagementService {
     }
 
     /**
+     * Retrieve user by e-mail
+     * 
+     * @param email User e-mail
+     * @return User if found
+     */
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    /**
      * Retrieve all users
      * 
      * @return List of all users
@@ -96,5 +106,9 @@ public class UserManagementService {
         }
         log.info("Deleting user with id: " + id);
         userRepository.deleteById(id);
+    }
+
+    public boolean matchPassword(String inputPassword, User user) {
+        return passwordEncoder.matches(inputPassword, user.getPassword());
     }
 }
