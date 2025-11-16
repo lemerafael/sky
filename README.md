@@ -126,6 +126,9 @@ $ docker-compose down
 ### Spring Boot Actuator
 - Enable health checks, metrics, and monitoring endpoints
 
+### Improve docker environment
+- Change the approach so it does not require manual copying of the generated jar file.
+
 ### Input validation
 - Add input validation (annotations) on DTOs
 
