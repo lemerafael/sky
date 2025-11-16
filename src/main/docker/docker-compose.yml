@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'docker-spring-boot-postgres:latest'
+    image: 'sky-projects-app:latest'
     build:
       context: .
     container_name: app
