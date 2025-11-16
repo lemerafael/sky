@@ -132,5 +132,36 @@ $ docker-compose down
 ### Input validation
 - Add input validation (annotations) on DTOs
 
+### Pagination
+- Implement Pagination for List Operations
+
 ### Demo data
 - Remove hardcoded demo data in Java and use seed data on the database
+
+## Project Development Process
+
+A step-by-step breakdown for internal records.
+
+1. postgres in docker
+1. postgres + external db from machine
+1. spring + postgres
+1. Spring initializr new project
+1. postgres 18 vs 17
+1. exposing swagger endpoints in docker
+1. writing RestController for users
+1. writing a POST method and getting null values (the problem was with the RequestBody import)
+1. using record for DTOs
+1. add projects in the DB
+1. add foreign key in Spring/JPA
+1. returning the db entity causes an infinite recursion
+1. implementing different queries from JPA
+1. basic auth without verification
+1. auth in Swagger
+1. auth with verification
+1. tests for users
+1. adding error codes for endpoints
+1. mocking info on tests
+1. improving architecture rest and service
+1. improving rest endpoints
+1. remove hardcoded secret key
+1. password hashing
