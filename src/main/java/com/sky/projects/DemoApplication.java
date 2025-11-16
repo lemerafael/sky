@@ -31,7 +31,7 @@ public class DemoApplication {
         List<User> allUsers = this.userService.getAllUsers();
         log.log(Level.INFO, "Number of users: " + allUsers.size());
 
-        UserDTO newUserReq = new UserDTO("email@email.com", "pass", "John");
+        UserDTO newUserReq = new UserDTO("admin@email.com", "admin", "Admin");
         log.log(Level.INFO, "Saving new user...");
         User newUser = this.userService.createUser(newUserReq);
 

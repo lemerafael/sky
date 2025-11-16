@@ -1,5 +1,12 @@
 # SKY Projects Portal
-TODO: Add brief description
+
+The Projects Portal is a Spring Boot REST API for managing user accounts and their assigned external projects. The application demonstrates problem-solving abilities and software engineering best practices including secure authentication, clean architecture, and comprehensive testing.
+
+Functionality: Users can authenticate via JWT tokens, manage their profile, and track assigned projects through RESTful endpoints. All data is persisted in PostgreSQL and the entire stack is containerized with Docker for local development.
+
+Technical Foundation: Built with Java and the Spring Framework ecosystem, the project showcases adherence to Spring best practices including separation of concerns, dependency injection, security configuration (BCrypt password hashing, externalized configuration), and comprehensive unit testing with JUnit 5.
+
+Goal: This project serves as an assessment of problem-solving abilities alongside soft skills including code organization, attention to architectural detail, and commitment to best practices in enterprise Java development.
 
 ## Endpoints
 
@@ -27,6 +34,7 @@ TODO: Add brief description
 | `/auth/login`           | POST   | Get login token for user      |
 
 ## Security
+
 The project features a token-based authentication.
 
 The *SecurityConfig* class allows public acess for the Swagger endpoints and for the endpoints located in /public and in /auth. The other endpoints from /users and from /projects are accessible only with authentication.
@@ -35,11 +43,15 @@ The *OpenApiConfig* class is responsible for adding the Authorization feature in
 
 The classes from the security.jwt package are responsible for generating the token and later verifying it.
 
-The *AuthenticationService* has a login endpoint for generating a token. The current implementation does not verify the e-mail or the password provided for login. 
+The *AuthenticationService* has a login endpoint for generating a token. The current implementation verifies the e-mail and the password provided (after hashing) for login with the stored user data.
 
-For future implementations, it is desirable to integrate the user information with the information previously stored in the database. It is also desirable to apply password hashing before storing it on the database and also verify user and password from the stored user data.
+## Unit testing
 
-## How to run the project?
+A testing suite was designed with JUnit 5 to cover basic scenario and edge cases. The tests are executed by maven, after the Java compilation.
+
+The suite covers the cases for the users endpoint. The tests for projects and authorization endpoints are pending.
+
+## Running Instructions
 
 1. Compile the java project
 ```bash
@@ -58,3 +70,51 @@ $ docker-compose up --build
 ```bash
 $ docker-compose down
 ```
+
+## Manual testing
+
+- Access the Swagger endpoint on http://localhost:8080/swagger-ui/index.html
+- Get the authorization token using the `/auth/login` endpoint. Use the predefined demo info email `admin@email.com` and password `admin`.
+- Click in the `Authorize` button and add the generated token. All endpoints should be available for testing.
+
+## TODOs
+
+## External projects
+- Separate service and controller data
+- Implement error treating
+
+## Testing for Users
+- Implement create tests with missing data
+- Implement create tests with extra data
+- Implement update tests
+- Implement update tests with missing data
+- Implement update tests with extra data
+- Implement delete tests
+- Implement delete tests with invalid info from user
+- Implement delete tests with info from nonexsistent user
+
+## Testing for Projects
+- Implement create tests
+- Implement create tests with invalid project info
+- Implement create tests with invalid info from user
+- Implement create tests with info from nonexsistent user
+- Implement get tests
+- Implement get tests with invalid info from user
+- Implement get tests with info from nonexsistent user
+
+## Testing for Authentication
+- Implement login tests
+- Implement login tests with invalid info from user
+- Implement login tests with missing info from user
+- Implement login tests with extra info from user
+
+## Future implementations
+
+### Role based authorization
+- Add role based authorization: ADMIN, MANAGER and USER. Add this information to tb_users.
+- ADMIN can create user and projects.
+- MANAGER can create projects. It can only access its own projects. It can only access information from the users related to its own projects.
+- USER cannot create new user or project. It can only acess its own projects and its own user information.
+
+### Custom Exceptions
+- Implement some custom Exceptions like UserNotFound or ProjectNotFound
