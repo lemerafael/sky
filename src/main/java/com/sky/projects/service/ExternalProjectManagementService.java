@@ -32,7 +32,7 @@ public class ExternalProjectManagementService {
      * or if user does not exist
      */
     public ExternalProject createExternalProject(long userId, ExternalProjectDTO projectDTO) {
-        if (projectRepository.findByUserIdAndName(userId, projectDTO.name()).isPresent()) {
+        if (projectRepository.findByUser_IdAndName(userId, projectDTO.name()).isPresent()) {
             throw new IllegalArgumentException("Project already exists");
         }
 
@@ -57,7 +57,7 @@ public class ExternalProjectManagementService {
      * @return List of projects by user ID
      */
     public List<ExternalProject> getAllProjectsByUserId(Long userId) {
-        return projectRepository.findAllByUserId(userId);
+        return projectRepository.findAllByUser_Id(userId);
     }
     
 }

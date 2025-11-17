@@ -9,10 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import com.sky.projects.model.dto.ExternalProjectDTO;
 import com.sky.projects.model.dto.UserDTO;
 import com.sky.projects.model.persistence.ExternalProject;
 import com.sky.projects.model.persistence.User;
-import com.sky.projects.repository.ExternalProjectRepository;
+import com.sky.projects.service.ExternalProjectManagementService;
 import com.sky.projects.service.UserManagementService;
 
 import lombok.extern.java.Log;
@@ -20,14 +21,18 @@ import lombok.extern.java.Log;
 @Log
 @SpringBootApplication
 public class DemoApplication {
-    @Autowired
+    @Autowired(required = false)
     private UserManagementService userService;
 
-    @Autowired
-    private ExternalProjectRepository projectRepo;
+    @Autowired(required = false)
+    private ExternalProjectManagementService projectRepo;
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
+        if(userService == null || projectRepo == null) {
+            return;
+        }
+
         List<User> allUsers = this.userService.getAllUsers();
         log.log(Level.INFO, "Number of users: " + allUsers.size());
 
@@ -38,16 +43,14 @@ public class DemoApplication {
         allUsers = this.userService.getAllUsers();
         log.log(Level.INFO, "Number of users: " + allUsers.size());
 
-        List<ExternalProject> allProjects = this.projectRepo.findAll();
+        List<ExternalProject> allProjects = this.projectRepo.getAllProjectsByUserId(newUser.getId());
         log.log(Level.INFO, "Number of projects: " + allProjects.size());
 
-        ExternalProject project = new ExternalProject();
-        project.setUser(newUser);
-        project.setName("First Project");
+        ExternalProjectDTO project = new ExternalProjectDTO("First Project");
         log.log(Level.INFO, "Saving new project...");
-        this.projectRepo.save(project);
+        this.projectRepo.createExternalProject(1L, project);
 
-        allProjects = this.projectRepo.findAll();
+        allProjects = this.projectRepo.getAllProjectsByUserId(newUser.getId());
         log.log(Level.INFO, "Number of projects: " + allProjects.size());
     }
 

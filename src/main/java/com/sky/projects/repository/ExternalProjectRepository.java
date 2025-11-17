@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.sky.projects.model.persistence.ExternalProject;
 
 public interface ExternalProjectRepository extends JpaRepository<ExternalProject, Long> {
-    List<ExternalProject> findAllByUserId(Long userId);
-    Optional<ExternalProject> findByUserIdAndName(Long userId, String name);
+    List<ExternalProject> findAllByUser_Id(Long userId);
+    Optional<ExternalProject> findByUser_IdAndName(Long userId, String name);
  }
