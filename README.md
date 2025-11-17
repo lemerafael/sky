@@ -12,26 +12,26 @@ Goal: This project serves as an assessment of problem-solving abilities alongsid
 
 ### User Management
 
-| Endpoint                | Method | Description                   |
-|-------------------------|--------|-------------------------------|
-| `/v1/users`             | GET    | Get all users                 |
-| `/v1/users/{id}`        | GET    | Get user by id                |
-| `/v1/users`             | POST   | Create new user               |
-| `/v1/users/{id}`        | PUT    | Update user by id             |
-| `/v1/users/{id}`        | DELETE | Delete user by id             |
+| Endpoint                   | Method | Description                   |
+|----------------------------|--------|-------------------------------|
+| `/v1/users`                | GET    | Get all users                 |
+| `/v1/users/{id}`           | GET    | Get user by id                |
+| `/v1/users`                | POST   | Create new user               |
+| `/v1/users/{id}`           | PUT    | Update user by id             |
+| `/v1/users/{id}`           | DELETE | Delete user by id             |
 
 ### Projects
 
-| Endpoint                | Method | Description                   |
-|-------------------------|--------|-------------------------------|
-| `/v1/projects/{id}`     | GET    | Get projects from user by id  |
-| `/v1/projects/{id}`     | POST   | Add new project to user by id |
+| Endpoint                   | Method | Description                   |
+|----------------------------|--------|-------------------------------|
+| `/v1/projects?userId={id}` | GET    | Get projects from user by id  |
+| `/v1/projects?userId={id}` | POST   | Add new project to user by id |
 
 ### Auth
 
-| Endpoint                | Method | Description                   |
-|-------------------------|--------|-------------------------------|
-| `/auth/login`           | POST   | Get login token for user      |
+| Endpoint                   | Method | Description                   |
+|----------------------------|--------|-------------------------------|
+| `/v1/auth/login`           | POST   | Get login token for user      |
 
 ## Security
 
@@ -78,11 +78,6 @@ $ docker-compose down
 - Click in the `Authorize` button and add the generated token. All endpoints should be available for testing.
 
 ## TODOs
-
-## External projects
-- Separate service and controller data
-- Implement error treatment and correct function returns
-- Change the logic for ID generation with auto Id Generation, as the current implementation is not thread-safe.
 
 ## Security vulnerability
 - Correct vulnerability by exposing password in users endpoint. It is a bad practice to expose the password, but the input UserDTO was used for easiness.
