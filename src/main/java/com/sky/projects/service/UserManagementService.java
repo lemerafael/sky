@@ -51,7 +51,7 @@ public class UserManagementService {
      * @param id User identifier
      * @return User if found
      */
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(long id) {
         return userRepository.findById(id);
     }
 
@@ -82,7 +82,7 @@ public class UserManagementService {
      * @return Updated user entity
      * @throws IllegalArgumentException if user not found
      */
-    public User updateUser(Long id, UserDTO userDTO) {
+    public User updateUser(long id, UserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
 
@@ -100,7 +100,7 @@ public class UserManagementService {
      * @param id User identifier
      * @throws IllegalArgumentException if user not found
      */
-    public void deleteUser(Long id) {
+    public void deleteUser(long id) {
         if (!userRepository.existsById(id)) {
             throw new IllegalArgumentException("User not found with id: " + id);
         }

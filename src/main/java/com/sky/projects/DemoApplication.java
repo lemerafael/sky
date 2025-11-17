@@ -42,9 +42,8 @@ public class DemoApplication {
         log.log(Level.INFO, "Number of projects: " + allProjects.size());
 
         ExternalProject project = new ExternalProject();
-        project.setId(1);
         project.setUser(newUser);
-        project.setName("Project");
+        project.setName("First Project");
         log.log(Level.INFO, "Saving new project...");
         this.projectRepo.save(project);
 

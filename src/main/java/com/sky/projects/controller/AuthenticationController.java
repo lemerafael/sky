@@ -13,7 +13,7 @@ import com.sky.projects.model.dto.AuthRequestDTO;
 import com.sky.projects.model.dto.AuthResponseDTO;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/v1/auth")
 public class AuthenticationController {
 
     @Autowired
