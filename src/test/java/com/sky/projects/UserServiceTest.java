@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sky.projects.controller.UserController;
 import com.sky.projects.model.dto.UserDTO;
 import com.sky.projects.model.dto.UserMapper;
+import com.sky.projects.model.dto.UserResponseDTO;
 import com.sky.projects.model.persistence.User;
 import com.sky.projects.service.UserManagementService;
 
@@ -80,8 +81,8 @@ public class UserServiceTest {
 
         mockMvc.perform(get(usersServicePrefix + "/" + searchedId))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(user.getId()))
                 .andExpect(jsonPath("$.name").value(user.getName()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
         verify(userService).getUserById(searchedId);
@@ -117,24 +118,24 @@ public class UserServiceTest {
                 .content(userDTOJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(user.getId()))
                 .andExpect(jsonPath("$.name").value(user.getName()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
-        verify(userService).createUser(checkSavedUserDTO(userDTO));
+        verify(userService).createUser(checkSavedUserDTO(user));
     }
 
-    private UserDTO checkSavedUserDTO(UserDTO input) {
+    private UserDTO checkSavedUserDTO(User input) {
         return argThat(savedUser -> savedUser != null &&
-                savedUser.email().equals(input.email()) &&
-                savedUser.password().equals(input.password()) &&
-                savedUser.name().equals(input.name()));
+                savedUser.password().equals(input.getPassword()) &&
+                savedUser.email().equals(input.getEmail()) &&
+                savedUser.name().equals(input.getName()));
     }
 
     private User mockDbUser(long id) {
         User user = initUser(id);
         when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
-        when(userService.createUser(checkSavedUserDTO(userMapper.toDto(user)))).thenReturn(user);
+        when(userService.createUser(checkSavedUserDTO(user))).thenReturn(user);
         when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
         return user;
     }

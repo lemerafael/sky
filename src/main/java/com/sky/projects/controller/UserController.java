@@ -11,6 +11,7 @@ import lombok.extern.java.Log;
 
 import com.sky.projects.model.dto.UserDTO;
 import com.sky.projects.model.dto.UserMapper;
+import com.sky.projects.model.dto.UserResponseDTO;
 import com.sky.projects.model.persistence.User;
 import com.sky.projects.service.UserManagementService;
 
@@ -31,10 +32,10 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         try {
             List<User> users = userManagementService.getAllUsers();
-            List<UserDTO> userDTOs = userMapper.toDtoList(users);
+            List<UserResponseDTO> userDTOs = userMapper.toResponseDtoList(users);
             return ResponseEntity.ok(userDTOs);
         } catch (Exception e) {
             log.severe("Error retrieving users: " + e.getMessage());
@@ -44,11 +45,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their unique identifier")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         try {
             User user = userManagementService.getUserById(id)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            return ResponseEntity.ok(userMapper.toDto(user));
+            return ResponseEntity.ok(userMapper.toResponseDto(user));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class UserController {
                     .buildAndExpand(createdUser.getId())
                     .toUri();
 
-            return ResponseEntity.created(location).body(userMapper.toDto(createdUser));
+            return ResponseEntity.created(location).body(userMapper.toResponseDto(createdUser));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -83,7 +84,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         try {
             User updatedUser = userManagementService.updateUser(id, userDTO);
-            return ResponseEntity.ok(userMapper.toDto(updatedUser));
+            return ResponseEntity.ok(userMapper.toResponseDto(updatedUser));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {

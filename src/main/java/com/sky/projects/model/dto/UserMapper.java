@@ -9,17 +9,24 @@ import com.sky.projects.model.persistence.User;
 
 @Component
 public class UserMapper {
-    
+
     public UserDTO toDto(User entity) {
         if (entity == null) {
             return null;
         }
         return new UserDTO(entity.getEmail(), entity.getPassword(), entity.getName());
     }
+    
+    public UserResponseDTO toResponseDto(User entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new UserResponseDTO(entity.getId(), entity.getEmail(), entity.getName());
+    }
 
-    public List<UserDTO> toDtoList(List<User> entities) {
+    public List<UserResponseDTO> toResponseDtoList(List<User> entities) {
         return entities.stream()
-            .map(this::toDto)
+            .map(this::toResponseDto)
             .collect(Collectors.toList());
     }
 }

@@ -79,9 +79,6 @@ $ docker-compose down
 
 ## TODOs
 
-## Security vulnerability
-- Correct vulnerability by exposing password in users endpoint. It is a bad practice to expose the password, but the input UserDTO was used for easiness.
-
 ## Testing for Users
 - Implement create tests with missing data
 - Implement create tests with extra data
@@ -97,9 +94,6 @@ $ docker-compose down
 - Implement create tests with invalid project info
 - Implement create tests with invalid info from user
 - Implement create tests with info from nonexsistent user
-- Implement get tests
-- Implement get tests with invalid info from user
-- Implement get tests with info from nonexsistent user
 
 ## Testing for Authentication
 - Implement login tests

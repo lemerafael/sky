@@ -110,17 +110,17 @@ public class ProjectServiceTest {
         return externalProject;
     }
 
-    private UserDTO checkSavedUserDTO(UserDTO input) {
+    private UserDTO checkSavedUserDTO(User input) {
         return argThat(savedUser -> savedUser != null &&
-                savedUser.email().equals(input.email()) &&
-                savedUser.password().equals(input.password()) &&
-                savedUser.name().equals(input.name()));
+                savedUser.password().equals(input.getPassword()) &&
+                savedUser.email().equals(input.getEmail()) &&
+                savedUser.name().equals(input.getName()));
     }
 
     private User mockDbUser(long id) {
         User user = initUser(id);
         when(userService.getUserById(user.getId())).thenReturn(Optional.of(user));
-        when(userService.createUser(checkSavedUserDTO(userMapper.toDto(user)))).thenReturn(user);
+        when(userService.createUser(checkSavedUserDTO(user))).thenReturn(user);
         when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
         return user;
     }
