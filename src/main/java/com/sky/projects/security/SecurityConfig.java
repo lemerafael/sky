@@ -33,7 +33,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                .requestMatchers("/public/**", "/auth/**").permitAll()
+                .requestMatchers("/public/**", "/v1/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtTokenFilter(jwtService), UsernamePasswordAuthenticationFilter.class);

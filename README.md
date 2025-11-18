@@ -74,7 +74,7 @@ $ docker-compose down
 ## Manual testing
 
 - Access the Swagger endpoint on http://localhost:8080/swagger-ui/index.html
-- Get the authorization token using the `/auth/login` endpoint. Use the predefined demo info email `admin@email.com` and password `admin`.
+- Get the authorization token using the `/v1/auth/login` endpoint. Use the predefined demo info email `admin@email.com` and password `admin`.
 - Click in the `Authorize` button and add the generated token. All endpoints should be available for testing.
 
 ## TODOs
