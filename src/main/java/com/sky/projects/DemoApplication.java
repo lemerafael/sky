@@ -40,6 +40,11 @@ public class DemoApplication {
         log.log(Level.INFO, "Saving new user...");
         User newUser = this.userService.createUser(newUserReq);
 
+        if (newUser == null) {
+            log.log(Level.WARNING, "Failed to create user, skipping project operations");
+            return;
+        }
+
         allUsers = this.userService.getAllUsers();
         log.log(Level.INFO, "Number of users: " + allUsers.size());
 

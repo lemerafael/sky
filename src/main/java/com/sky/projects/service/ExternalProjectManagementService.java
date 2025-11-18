@@ -57,7 +57,12 @@ public class ExternalProjectManagementService {
      * @return List of projects by user ID
      */
     public List<ExternalProject> getAllProjectsByUserId(Long userId) {
-        return projectRepository.findAllByUser_Id(userId);
+        Optional<User> userOptional = userManagementService.getUserById(userId);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User does not exist");
+        } else {
+            return projectRepository.findAllByUser_Id(userId);
+        }
     }
     
 }
